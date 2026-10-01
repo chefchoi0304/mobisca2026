@@ -39,6 +39,7 @@ npx vercel --prod   # 운영 주소로 배포
 - 부스 활동명: `IDX`
 - 사업장 월 크기: `booth({... W:2.0, H:2.2})`
 - 시점 카메라: `VIEWS`
+- 리셉션 시점: recep
 - URL 끝에 `#shot-bird` 처럼 붙이면 UI 없이 해당 시점만 보여줍니다 (bird / booth / hall / detail / recep).
 
 ※ 치수는 1층 평면도(A12-002) 기준, 천장고·기둥·LED 크기는 2025년 사진으로 추정한 값입니다.
