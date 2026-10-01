@@ -77,6 +77,10 @@ box(36.4,HALL_CEIL-HALL_Y,0.3,mWallHall,18,(HALL_CEIL+HALL_Y)/2,-0.15);
 box(0.3,HALL_CEIL-HALL_Y,23.6,mWallHall,-0.15,(HALL_CEIL+HALL_Y)/2,11.8); surf(23.6,HALL_CEIL-HALL_Y,tWallH,{roughness:.6},{x:0.005,y:(HALL_CEIL+HALL_Y)/2,z:11.8,rx:0,ry:Math.PI/2});
 const eastWall=box(0.3,HALL_CEIL-HALL_Y,23.6,mWallHall,36.15,(HALL_CEIL+HALL_Y)/2,11.8);
 box(0.3,ZC,15.8,mWall,-0.15,ZC/2,31.5); surf(15.8,ZC,tWallZ,{roughness:.6},{x:0.005,y:ZC/2,z:31.5,rx:0,ry:Math.PI/2});
+// east lobby walls (north/east) – toggled with ceiling
+const lobbyW=new THREE.Group();scene.add(lobbyW);
+box(8.6,ZC,0.3,mWall,40.2,ZC/2,23.45,lobbyW); surf(8.6,ZC,tWallZ,{roughness:.6},{x:40.2,y:ZC/2,z:23.61,rx:0,parent:lobbyW});
+box(0.3,ZC,16.1,mWall,44.65,ZC/2,31.5,lobbyW); surf(16.1,ZC,tWallZ,{roughness:.6,emissive:0xffffff,emissiveMap:tWallZ,emissiveIntensity:.35},{x:44.49,y:ZC/2,z:31.5,rx:0,ry:-Math.PI/2,parent:lobbyW});
 // glass south facade
 const glass=new THREE.Mesh(new THREE.PlaneGeometry(44,ZC),new THREE.MeshPhysicalMaterial({color:0xcfe3ea,transparent:true,opacity:.28,roughness:.05}));
 glass.position.set(22,ZC/2,39.4); scene.add(glass);
@@ -89,6 +93,7 @@ const ceil=new THREE.Group(); scene.add(ceil);
 const tCz=ceilTex({}), tCh=ceilTex({base:0x2b2c31,slot:false,dots:true});
 const cOpt={roughness:.9,emissive:0xffffff,emissiveIntensity:.62};
 [[21.8,13,10.9,32.9],[14.9,13,36.55,32.9],[7.3,5.7,25.45,29.25],[7.3,3.3,25.45,37.75]].forEach(([w,d,x,z])=>{const m=surf(w,d,tCz,Object.assign({emissiveMap:tCz},cOpt),{x,y:ZC,z,rx:Math.PI/2,parent:ceil,shadow:false});});
+[[8.5,2.8,40.25,25.0]].forEach(([w,d,x,z])=>surf(w,d,tCz,Object.assign({emissiveMap:tCz},cOpt),{x,y:ZC,z,rx:Math.PI/2,parent:ceil,shadow:false}));
 surf(36,26.4,tCh,{roughness:.9,emissive:0xffffff,emissiveMap:tCh,emissiveIntensity:.35},{x:18,y:HALL_CEIL,z:13.2,rx:Math.PI/2,parent:ceil,shadow:false});
 // columns (matte white plaster)
 const colX=[5.88,11.94,17.94,23.94,29.94];
@@ -105,45 +110,49 @@ function label(text,{x,y,z,size=1,bg="#2e3ed2",fg="#fff",pad=22,fs=48,round=true
   s.scale.set(size*w/h*0.75,size*0.75,1);s.position.set(x,y,z);scene.add(s);if(area)areaLabels.push(s);return s}
 // ---------- booth (CA별 월 템플릿 시안 적용) ----------
 const mTable=M(0xfafafa,{roughness:.35}), mFrame=M(0xe9e9ee,{roughness:.5});
-function booth({x,z,rot,no,img,biz=false,standby=false,W=1.2,H=2.1}){
+function booth({x,z,rot,no,img,biz=false,standby=false,W=1.2,H=2.1,PZW=1.8}){
   const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=rot;scene.add(g);
   box(W,H,0.12,mFrame,0,H/2,0,g);
   const face=new THREE.Mesh(new THREE.PlaneGeometry(W-0.02,H-0.03),new THREE.MeshStandardMaterial({map:tex(img),roughness:.6,envMapIntensity:.3}));face.position.set(0,H/2,0.065);g.add(face);
   box(Math.min(W*0.45,0.9),0.04,0.35,mFrame,0,0.02,-0.12,g);
   if(!biz){box(0.8,0.78,0.8,mTable,0,0.39,0.06+0.4+0.02,g); box(0.84,0.03,0.84,mTable,0,0.795,0.48,g);
-    const zone=new THREE.Mesh(new THREE.PlaneGeometry(1.8,1.6),new THREE.MeshStandardMaterial({color:0xc7d1fb,transparent:true,opacity:.35}));zone.rotation.x=-Math.PI/2;zone.position.set(0,0.012,1.0);zone.receiveShadow=true;g.add(zone);}
+    const zone=new THREE.Mesh(new THREE.PlaneGeometry(PZW,1.4),new THREE.MeshStandardMaterial({color:0xc7d1fb,transparent:true,opacity:.35}));zone.rotation.x=-Math.PI/2;zone.position.set(0,0.012,1.58);zone.receiveShadow=true;g.add(zone);}
   if(standby){const s=new THREE.Group();s.position.set(0.85,0,0.5);g.add(s);
     cyl(0.24,0.04,M(0xe2e2e6),0,0.02,0,24,s);cyl(0.03,1.0,M(0xd0d0d6,{metalness:.6,roughness:.3}),0,0.52,0,12,s);
     box(0.63,0.38,0.04,mDark,0,1.15,0.03,s);const sc=new THREE.Mesh(new THREE.PlaneGeometry(0.6,0.35),new THREE.MeshBasicMaterial({color:0x4f67ff}));sc.position.set(0,1.15,0.052);s.add(sc)}
   const tag=label(no,{x:0,y:0,z:0,size:0.55,bg:biz?"#c9414b":"#2a3170",fs:48,area:false});scene.remove(tag);tag.material.depthTest=true;tag.position.set(0,H+0.35,0.1);g.add(tag);
   return g}
-const top=[22.51,19.51,16.51,13.51,10.51,7.51], west=[29.17,31.76,34.35,37.01], bot=[7.66,10.26,13.66,16.26,19.66,22.26];
+// ㅁ자 배치 (CAD 실측) – 기둥 사이 2개씩: 북 01-06(동→서) · 서 07-08 · 남 09-14(서→동) · 계단 서측 끝 15-16
+const RX=[2.5,4.35,7.9,9.9,13.95,15.95];
 const SB=new Set([1,4,8,12,15]);const nn=i=>String(i).padStart(2,"0");
-top.forEach((x,i)=>booth({x,z:27.35,rot:0,no:nn(i+1),img:A["ca"+nn(i+1)],standby:SB.has(i+1)}));
-west.forEach((z,i)=>booth({x:1.5,z,rot:Math.PI/2,no:nn(i+7),img:A["ca"+nn(i+7)],standby:SB.has(i+7)}));
-bot.forEach((x,i)=>booth({x,z:38.9,rot:Math.PI,no:nn(i+11),img:A["ca"+nn(i+11)],standby:SB.has(i+11)}));
-booth({x:21.2,z:32.6,rot:-Math.PI/2,no:"A",img:A.bizA,biz:true,W:2.0,H:2.2});
-booth({x:21.2,z:35.1,rot:-Math.PI/2,no:"B",img:A.bizB,biz:true,W:2.0,H:2.2});
+const mk=(i,o)=>booth(Object.assign({no:nn(i),img:A["ca"+nn(i)],standby:SB.has(i)},o));
+[...RX].reverse().forEach((x,i)=>mk(i+1,{x,z:30.32,rot:0}));
+mk(7,{x:0.06,z:33.4,rot:Math.PI/2,PZW:1.6}); mk(8,{x:0.06,z:34.6,rot:Math.PI/2,PZW:1.6});
+RX.forEach((x,i)=>mk(i+9,{x,z:37.88,rot:Math.PI}));
+mk(15,{x:18.4,z:34.6,rot:-Math.PI/2,PZW:1.6}); mk(16,{x:18.4,z:33.4,rot:-Math.PI/2,PZW:1.6});
+// 사업장 월 (부스존 북동측, 남향) – 1~2개 검토 중
+booth({x:27.9,z:27.25,rot:0,no:"A",img:A.bizA,biz:true,W:2.0,H:2.2});
+booth({x:30.4,z:27.25,rot:0,no:"B",img:A.bizB,biz:true,W:2.0,H:2.2});
 // archive wall (honeycomb, faces south)
-const arc=new THREE.Group();arc.position.set(27.6,0,27.25);scene.add(arc);
+const arc=new THREE.Group();arc.position.set(34.9,0,26.6);scene.add(arc);
 box(4.0,2.2,0.3,M(0xf2efe8),0,1.1,0,arc);
 const af=new THREE.Mesh(new THREE.PlaneGeometry(4.0,2.2),new THREE.MeshStandardMaterial({map:tex(A.arc),roughness:.75,envMapIntensity:.3}));af.position.set(0,1.1,0.155);arc.add(af);
 // VOID stair
 const rail=new THREE.MeshPhysicalMaterial({color:0xcfe3ea,transparent:true,opacity:.35});
-{const n=22, x0=22.2, x1=29.1, top=3.9, run=(x1-x0)/n, r=top/n, mSt=M(0xd6d3cb,{roughness:.5}), mStr=M(0x7b7e86,{roughness:.4,metalness:.3});
- for(let i=0;i<n;i++){const h=r*(i+1);box(run+0.02,0.06,3.4,mSt,x1-run*i-run/2,h-0.03,34.1)}
+{const n=26, x0=18.5, x1=30.2, top=4.5, run=(x1-x0)/n, r=top/n, mSt=M(0xd6d3cb,{roughness:.5}), mStr=M(0x7b7e86,{roughness:.4,metalness:.3});
+ for(let i=0;i<n;i++){const h=r*(i+1);box(run+0.02,0.06,4.0,mSt,x1-run*i-run/2,h-0.03,34.1)}
  const L=Math.hypot(x1-x0,top), ang=-Math.atan2(top,x1-x0);
- [32.35,35.85].forEach(z=>{const s=new THREE.Mesh(new THREE.BoxGeometry(L,0.32,0.12),mStr);s.position.set((x0+x1)/2,top/2-0.12,z);s.rotation.z=ang;s.castShadow=true;scene.add(s);
+ [32.05,36.15].forEach(z=>{const s=new THREE.Mesh(new THREE.BoxGeometry(L,0.32,0.12),mStr);s.position.set((x0+x1)/2,top/2-0.12,z);s.rotation.z=ang;s.castShadow=true;scene.add(s);
    const g=new THREE.Mesh(new THREE.BoxGeometry(L,0.95,0.03),rail);g.position.set((x0+x1)/2,top/2+0.5,z);g.rotation.z=ang;scene.add(g);
    const h=new THREE.Mesh(new THREE.BoxGeometry(L,0.05,0.07),mStr);h.position.set((x0+x1)/2,top/2+1.0,z);h.rotation.z=ang;scene.add(h)});}
 // reception (east lobby, faces south) – 키비주얼 기반 시안
-{box(3.0,2.4,0.3,M(0x2a3170),40,1.2,25.2);
- const f=new THREE.Mesh(new THREE.PlaneGeometry(2.98,2.38),new THREE.MeshStandardMaterial({map:tex(A.recep_wall),roughness:.6,envMapIntensity:.3}));f.position.set(40,1.2,25.36);scene.add(f);
- box(4.0,1.0,0.6,M(0x252c6a),40,0.5,26.9); box(4.04,0.04,0.66,M(0xf5f5f7,{roughness:.3}),40,1.02,26.9);
- const fr=new THREE.Mesh(new THREE.PlaneGeometry(3.98,0.98),new THREE.MeshStandardMaterial({map:tex(A.recep_desk),roughness:.6,envMapIntensity:.3}));fr.position.set(40,0.5,27.21);scene.add(fr);
- [38.8,40,41.2].forEach(x=>{const ch=new THREE.Group();ch.position.set(x,0,26.2);scene.add(ch);box(0.45,0.05,0.45,M(0x3a3e4a),0,0.62,0,ch);cyl(0.03,0.6,M(0x9a9ea8,{metalness:.7,roughness:.3}),0,0.3,0,8,ch)});
+{box(3.0,2.4,0.3,M(0x2a3170),39.3,1.2,26.6);
+ const f=new THREE.Mesh(new THREE.PlaneGeometry(2.98,2.38),new THREE.MeshStandardMaterial({map:tex(A.recep_wall),roughness:.6,envMapIntensity:.3}));f.position.set(39.3,1.2,26.76);scene.add(f);
+ box(4.0,1.0,0.6,M(0x252c6a),39.3,0.5,28.25); box(4.04,0.04,0.66,M(0xf5f5f7,{roughness:.3}),39.3,1.02,28.25);
+ const fr=new THREE.Mesh(new THREE.PlaneGeometry(3.98,0.98),new THREE.MeshStandardMaterial({map:tex(A.recep_desk),roughness:.6,envMapIntensity:.3}));fr.position.set(39.3,0.5,28.56);scene.add(fr);
+ [38.1,39.3,40.5].forEach(x=>{const ch=new THREE.Group();ch.position.set(x,0,27.5);scene.add(ch);box(0.45,0.05,0.45,M(0x3a3e4a),0,0.62,0,ch);cyl(0.03,0.6,M(0x9a9ea8,{metalness:.7,roughness:.3}),0,0.3,0,8,ch)});
  // pamphlet stacks on desk
- [39.0,40.9].forEach(x=>box(0.21,0.03,0.30,M(0xc9c6d7),x,1.055,26.8));
+ [38.3,40.2].forEach(x=>box(0.21,0.03,0.30,M(0xc9c6d7),x,1.055,28.15));
 }
 // ---------- main hall ----------
 const led=new THREE.Mesh(new THREE.PlaneGeometry(20,4.0),new THREE.MeshBasicMaterial({map:tex(A.led)}));led.position.set(18,HALL_Y+0.2+2.0,0.27);scene.add(led);
@@ -156,19 +165,25 @@ const clothGeo=(()=>{const R=0.9,Ht=0.76,pts=[];pts.push(new THREE.Vector2(0,Ht+
   for(let i=0;i<p.count;i++){const x=p.getX(i),y=p.getY(i),z=p.getZ(i);if(y<Ht-0.03){const t=1-y/(Ht-0.03),a=Math.atan2(z,x),k=1+t*(0.022*Math.sin(a*22)+0.01*Math.sin(a*9+1.3));p.setX(i,x*k);p.setZ(i,z*k)}}
   g.computeVertexNormals();return g})();
 const mCloth=new THREE.MeshStandardMaterial({color:0x15161b,roughness:.92,side:THREE.DoubleSide,envMapIntensity:.25});
-// chair: charcoal upholstered seat/back + chrome tube frame (2025 사진 기준)
-function chairParts(){const fab=[],fr=[];const T=(g,x,y,z,rx=0)=>{g.applyMatrix4(new THREE.Matrix4().makeRotationX(rx).setPosition(x,y,z));return g};
-  fab.push(T(new RoundedBoxGeometry(0.46,0.07,0.45,2,0.03),0,0.47,0.02));
-  fab.push(T(new RoundedBoxGeometry(0.44,0.40,0.05,2,0.022),0,0.76,-0.215,-0.14));
-  const tube=(x1,y1,z1,x2,y2,z2)=>{const a=new THREE.Vector3(x1,y1,z1),b=new THREE.Vector3(x2,y2,z2),L=a.distanceTo(b),g=new THREE.CylinderGeometry(0.011,0.011,L,8);
-    g.applyMatrix4(new THREE.Matrix4().makeRotationFromQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,1,0),b.clone().sub(a).normalize())));g.translate((x1+x2)/2,(y1+y2)/2,(z1+z2)/2);return g};
-  [-0.2,0.2].forEach(x=>{fr.push(tube(x,0.44,0.21,x*1.08,0,0.25));fr.push(tube(x,0.44,-0.19,x*1.08,0,-0.24));fr.push(tube(x,0.44,-0.2,x,0.93,-0.28))});
-  fr.push(tube(-0.2,0.44,0.21,0.2,0.44,0.21));fr.push(tube(-0.21,0.01,0.25,-0.21,0.01,-0.24));fr.push(tube(0.21,0.01,0.25,0.21,0.01,-0.24));
-  return [mergeGeometries(fab),mergeGeometries(fr)]}
+// banquet chair with full-length dark chair cover (의자보 연회의자)
+function chairParts(){const T=(g,x,y,z,rx=0,ry=0)=>{g.applyMatrix4(new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(rx,ry,0)).setPosition(x,y,z));return g};
+  const cover=[],pleat=[];
+  // skirt over seat & legs: square frustum to the floor, slightly flared
+  const sk=new THREE.CylinderGeometry(0.33,0.355,0.45,4,6,true);sk.rotateY(Math.PI/4);
+  {const p=sk.attributes.position;for(let i=0;i<p.count;i++){const y=p.getY(i),t=(0.225-y)/0.45,x=p.getX(i),z=p.getZ(i),a=Math.atan2(z,x);const k=1+t*0.018*Math.sin(a*14);p.setX(i,x*k);p.setZ(i,z*k)}}
+  cover.push(T(sk,0,0.225,0.02));
+  cover.push(T(new RoundedBoxGeometry(0.48,0.07,0.48,3,0.03),0,0.475,0.02));          // padded seat top
+  cover.push(T(new RoundedBoxGeometry(0.45,0.56,0.08,3,0.035),0,0.78,-0.2,-0.08));      // covered high back
+  // back cover hem hanging behind
+  cover.push(T(new THREE.BoxGeometry(0.45,0.30,0.012),0,0.36,-0.235,0.02));
+  // soft pleats at the skirt corners
+  [[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([sx,sz])=>pleat.push(T(new THREE.CylinderGeometry(0.012,0.02,0.44,6),sx*0.236,0.22,0.02+sz*0.236)));
+  return [mergeGeometries(cover.map(g=>g.index?g.toNonIndexed():g)),mergeGeometries(pleat)]}
 const [gFab,gFr]=chairParts();
 const tables=[];[8,13,18,23,28].forEach(x=>[7,12.5,18].forEach(z=>tables.push([x,z])));
 const NCH=tables.length*10;
-const iFab=new THREE.InstancedMesh(gFab,M(0x34363d,{roughness:.85}),NCH), iFr=new THREE.InstancedMesh(gFr,M(0xd4d6db,{metalness:1,roughness:.22,envMapIntensity:1}),NCH);
+const mCover=new THREE.MeshStandardMaterial({color:0x3d4049,roughness:.82,side:THREE.DoubleSide,envMapIntensity:.55});
+const iFab=new THREE.InstancedMesh(gFab,mCover,NCH), iFr=new THREE.InstancedMesh(gFr,mCover,NCH);
 const iSau=new THREE.InstancedMesh(new THREE.CylinderGeometry(0.075,0.065,0.012,24),M(0xffffff,{roughness:.25}),NCH);
 const iCup=new THREE.InstancedMesh(new THREE.CylinderGeometry(0.04,0.032,0.07,20),M(0xffffff,{roughness:.25}),NCH);
 const iBot=new THREE.InstancedMesh(new THREE.CylinderGeometry(0.032,0.032,0.2,14),new THREE.MeshStandardMaterial({color:0xcfe6ff,roughness:.1,transparent:true,opacity:.55,envMapIntensity:1}),NCH);
@@ -189,21 +204,22 @@ tables.forEach(([x,z],ti)=>{
 // area labels (short)
 const DK="rgba(20,24,48,.88)";
 label("메인홀",{x:18,y:HALL_Y+4.2,z:13,size:1.6,bg:DK});
-label("부스존",{x:12,y:3.9,z:33,size:1.6,bg:DK});
+label("부스존",{x:9.2,y:3.9,z:34,size:1.6,bg:DK});
 label("계단",{x:9,y:1.3,z:25.0,size:1.0,bg:"rgba(255,255,255,.92)",fg:"#1d2233"});
-label("아카이브월",{x:27.6,y:3.0,z:27.5,size:1.0,bg:"#b86a00"});
-label("2층 계단",{x:25.6,y:4.6,z:34.1,size:1.0,bg:"rgba(255,255,255,.92)",fg:"#1d2233"});
+label("아카이브월",{x:34.9,y:3.0,z:26.9,size:1.0,bg:"#b86a00"});
+label("2층 계단",{x:24.3,y:5.2,z:34.1,size:1.0,bg:"rgba(255,255,255,.92)",fg:"#1d2233"});
 label("LED 월",{x:18,y:HALL_Y+4.7,z:0.8,size:1.1,bg:"#2e3ed2"});
-label("리셉션",{x:40,y:3.0,z:26.2,size:1.0,bg:"#2e3ed2"});
+label("사업장",{x:29.15,y:3.2,z:27.4,size:1.0,bg:"#c9414b"});
+label("리셉션",{x:39.3,y:3.0,z:27.6,size:1.0,bg:"#2e3ed2"});
 // ---------- views ----------
 const VIEWS={
   bird:{p:[43,27,53],t:[18,-1,23],ceil:false},
-  booth:{p:[35.5,1.65,30.4],t:[8,1.2,32.5],ceil:true},
+  booth:{p:[17.2,1.65,34.0],t:[2,1.2,34.0],ceil:true},
   hall:{p:[21,1.75,26.0],t:[15,0.2,4],ceil:true},
-  detail:{p:[20.6,1.7,30.9],t:[22.4,1.0,27.6],ceil:true},
-  recep:{p:[40,1.7,34.5],t:[40,1.1,25.6],ceil:true}};
+  detail:{p:[11.6,1.7,35.4],t:[9.2,1.0,30.6],ceil:true},
+  recep:{p:[38.8,1.7,38.6],t:[37.4,1.2,26.6],ceil:true}};
 let ceilOn=false;const tc=document.getElementById("t-ceil");
-function setCeil(v){ceilOn=v;ceil.visible=v;eastWall.visible=v;areaLabels.forEach(s=>s.visible=!v);trees.visible=v;glass.visible=v;mull.visible=v;tc.setAttribute("aria-pressed",String(v));tc.textContent=v?"천장 숨기기":"천장 보기"}
+function setCeil(v){ceilOn=v;ceil.visible=v;eastWall.visible=v;lobbyW.visible=v;areaLabels.forEach(s=>s.visible=!v);trees.visible=v;glass.visible=v;mull.visible=v;tc.setAttribute("aria-pressed",String(v));tc.textContent=v?"천장 숨기기":"천장 보기"}
 function go(name){const v=VIEWS[name];camera.position.set(...v.p);controls.target.set(...v.t);setCeil(v.ceil);
   document.querySelectorAll(".views button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v===name)));controls.update()}
 document.querySelectorAll(".views button").forEach(b=>b.addEventListener("click",()=>go(b.dataset.v)));
