@@ -60,10 +60,17 @@ body.shot .stage{border:0;border-radius:0}
     <div class="views" role="group" aria-label="시점">
       <button id="v-bird" data-v="bird" aria-pressed="true">전체 조감도</button>
       <button id="v-booth" data-v="booth" aria-pressed="false">부스 ZONE</button>
+      <button id="v-entry" data-v="entry" aria-pressed="false">부스존 진출입</button>
       <button id="v-hall" data-v="hall" aria-pressed="false">메인홀</button>
       <button id="v-detail" data-v="detail" aria-pressed="false">부스 상세</button>
       <button id="v-recep" data-v="recep" aria-pressed="false">리셉션</button>
+      <button id="v-play" data-v="play" aria-pressed="false">플레이존</button>
+      <button id="v-biz" data-v="biz" aria-pressed="false">사업장 부스</button>
+      <button id="v-arc" data-v="arc" aria-pressed="false">아카이브월</button>
+      <button id="v-sign" data-v="sign" aria-pressed="false">로비 · X배너</button>
+      <button id="v-pre" data-v="pre" aria-pressed="false">오픈 전</button>
     </div>
+    <button class="tog" id="t-pre" aria-pressed="false">오픈 전 차단 보기</button>
     <button class="tog" id="t-ceil" aria-pressed="false">천장 보기</button>
   </div>
   <div class="main">
@@ -72,36 +79,40 @@ body.shot .stage{border:0;border-radius:0}
       <h2>공간 규격</h2>
       <dl>
         <dt>도면</dt><dd>A12-002 · 1:800(A3)</dd>
-        <dt>기둥 간격</dt><dd>6,000 / 7,800<span class="tag cad">도면</span></dd>
+        <dt>기둥 간격</dt><dd>6,000(면~면 5,000) / 7,800<span class="tag cad">실측</span></dd>
         <dt>부스 ZONE</dt><dd>33.0 × 12.8m<span class="tag cad">도면</span></dd>
         <dt>메인홀</dt><dd>36 × 24m<span class="tag cad">도면</span></dd>
         <dt>바닥 레벨</dt><dd>FL+170 / FL−860<span class="tag cad">도면</span></dd>
-        <dt>계단</dt><dd>6단 · 단차 1.03m<span class="tag cad">도면</span></dd>
-        <dt>2층 계단</dt><dd>폭 4.0 · 길이 11.7m<span class="tag cad">도면</span></dd>
-        <dt>부스 ZONE 천장고</dt><dd>약 3.3m<span class="tag est">추정</span></dd>
-        <dt>메인홀 천장고</dt><dd>약 5.0m<span class="tag est">추정</span></dd>
-        <dt>기둥 지름</dt><dd>약 1,000<span class="tag est">추정</span></dd>
-        <dt>LED 월</dt><dd>대관처 기존 설비 · 약 20 × 4.0m<span class="tag est">추정</span></dd>
+        <dt>계단</dt><dd>7단 · 깊이 500 · 단차 약 1.0m<span class="tag cad">실측</span></dd>
+        <dt>2층 계단</dt><dd>검정 철골 오픈 계단 · 폭 3.6 · 양옆 통로 1.45m · 15·16 자리 하부 2.4m<span class="tag cad">실측</span></dd>
+        <dt>부스 ZONE 천장고</dt><dd>3.0m<span class="tag cad">실측</span></dd>
+        <dt>메인홀 천장고</dt><dd>3.96m<span class="tag cad">실측</span></dd>
+        <dt>기둥 지름</dt><dd>960<span class="tag cad">실측</span></dd>
+        <dt>LED 월</dt><dd>대관처 기존 설비 · 약 20 × 3.0m (14400×2160 비율)<span class="tag est">추정</span></dd>
       </dl>
       <h2>부스 1개 구성</h2>
       <dl>
         <dt>CA 백월</dt><dd>1,200 × 2,100(H)</dd>
-        <dt>사업장 월</dt><dd>2,000 × 2,200(H)</dd>
-        <dt>게임 테이블</dt><dd>800 × 800 × 800</dd>
-        <dt>LG 스탠바이미</dt><dd>선택 · 예시 5곳</dd>
+        <dt>사업장 월</dt><dd>1,600 × 2,100(H) · 10/14 변경</dd>
+        <dt>도장 테이블</dt><dd>600 × 600 · 백월 옆</dd>
+        <dt>LG 스탠바이미</dt><dd>12대 (10/14 수요조사 + 10/20 경영지원) · 01·02·03·05·06·07·08·09·11·12·15·16번</dd>
         <dt>부스 배치</dt><dd>ㅁ자 · 기둥 사이 2개</dd>
-        <dt>부스 수</dt><dd>조직 16 + 사업장 1~2(검토 중)</dd>
-        <dt>리셉션</dt><dd>동측 로비 · 정문 정면</dd>
-        <dt>리셉션 규격</dt><dd>데스크 4.0m · 백월 3.0 × 2.4m</dd>
-        <dt>아카이브월</dt><dd>4,000 × 2,200 × 300</dd>
+        <dt>부스 수</dt><dd>조직 16 + 사업장 2</dd>
+        <dt>사업장 부스</dt><dd>01·02번 뒤 · 북향(계단 쪽)</dd>
+        <dt>플레이존</dt><dd>북측 · 퍼팅 · 100g 맞히기 게임별 1세트 (1인 1게임)</dd>
+        <dt>리셉션</dt><dd>정문 북동쪽 · 계단실 문 동쪽 (남향)</dd>
+        <dt>리셉션 규격</dt><dd>안내데스크 듀라테이블 1800×600 × 2 (3.6m) + 남색 테이블보 · 백월 4.0 × 2.2m (허니콤)</dd>
+        <dt>아카이브월</dt><dd>4,000 × 2,200 × 300 · 엘리베이터 코어 앞 기둥 앞 (남향)</dd>
       </dl>
       <h2>메인홀 세팅</h2>
       <dl>
         <dt>원형 테이블</dt><dd>Ø1,800 · 10인 × 15</dd>
         <dt>수용</dt><dd>150명</dd>
         <dt>LED · 연단</dt><dd>북측 벽 (계단 맞은편)</dd>
+        <dt>콘솔 · 케이터링</dt><dd>메인홀 우측(동측) 벽면 – 콘솔은 북쪽 끝, 케이터링 테이블 1800 × 5 (9m)</dd>
+        <dt>소화전</dt><dd>서측 벽 · 남서 모서리에서 2.9m · 900×1,740 – 앞 비움</dd>
       </dl>
-      <p>치수는 CAD 도면(1층 평면도 변경후, 2012.05)에서 읽은 값이고, ‘추정’은 2025년 백월(2,000 × 2,400)을 기준 자로 삼아 작년 현장 사진에서 역산한 값이에요. 부스 번호는 리플렛 부스맵 순서예요. 부스 백월은 CA별·사업장별 월 템플릿 시안을 대략 적용한 예시(실제는 CA 선택 후 디자이너 보정), 리셉션·아카이브월은 키비주얼 기반 임의 시안이에요. 바닥·벽·기둥 질감은 답사 사진 기준으로 표현했고, 스탠바이미 위치는 예시예요.</p>
+      <p>치수는 CAD 도면(1층 평면도 변경후, 2012.05) 값에 10/12 답사 실측을 반영했고(‘실측’ 표시), ‘추정’은 2025년 백월(2,000 × 2,400)을 기준 자로 삼아 작년 현장 사진에서 역산한 값이에요. 부스 번호는 10/14 확정 배정 순서(01 전동화/모듈BU ~ 16 안전보건담당)예요. ‘오픈 전’은 부스존 차단봉 라인(사업장 부스·15·16번 앞마당 포함)을 보여 줘요. X배너는 10/20 기준 실내 6개(B6 행사장 안내 · B7 리셉션 · B9 조직별 활동전시 · B10 사업장 활동전시 · B11·B12 게임 설명, B8 아카이브월 배너는 미설치)이고, 외부 동선 5개(B1~B5)는 오시는 길 약도에 표시했어요. 바닥 회색 띠는 부스 하부 파이텍스 보양이에요. 부스 백월은 10/14 디자이너 2차 수정 시안(13번 반도체사업담당은 미수령 – 템플릿 예시), 사업장 월은 초안(A 본사·마북·의왕 / B 서비스·진천·창원), 리셉션은 키비주얼 기반 임의 시안, 아카이브월은 10/16 디자이너 시안(텍스트 사이즈업 v02 · 사진 16 + 조직별 문구 일체 출력)이에요. 바닥·벽·기둥·천장 질감은 10/12 답사 사진 기준(부스존 회색 석재 · 정문 로비 웜 브라운 · 메인홀 웜 베이지, 부스존 흰 타공 천장 · 메인홀 밝은 회색 메탈 천장)으로 표현했고, 부스존 라운지 소파·러그는 대관처가 행사 전 치워 주는 것으로 보고 넣지 않았어요. 스탠바이미 위치는 예시예요.</p>
     </aside>
   </div>
 </div>
